@@ -1,0 +1,70 @@
+import pandas as pd 
+import numpy as np 
+import matplotlib.pyplot as plt 
+import cv2
+import os
+from glob import glob
+import librosa
+
+y, sr = librosa.load("C:/Audio_Files/Major/Major_6.wav")
+print("10 first values of the audio")
+print(y[:10])
+
+print("The shape of the audio : ")
+print(y.shape)
+
+print("sample rate :"+ str(sr))
+
+D= librosa.stft(y)
+S_db= librosa.amplitude_to_db(np.abs(D),ref=np.max)
+
+print(S_db.shape)
+print(type(S_db))
+
+audioAsImage=(S_db * 255).astype(np.uint8)
+print(audioAsImage)
+print(audioAsImage.shape)
+
+cv2.imwrite("e:/temp/Major_6.png",audioAsImage)
+
+#Mojor files
+path_for_Major_Spectogram="C:/Audio_Files/Major/New/major"
+isExist=os.path.exists(path_for_Major_Spectogram)
+if not isExist:
+    os.makedirs(path_for_Major_Spectogram)
+    print("The new major folder created: !")
+
+Majoraudiofiles = glob("C:/Audio_Files/Major/Major_6.wav")
+
+for file in Majoraudiofiles:
+    y,sr=librosa.load(file)
+    D=librosa.stft(y)
+    S_db=librosa.amplitude_to_db(np.abs(D),ref=np.max)
+    ImageAudio= (S_db * 255).astype(np.uint8)
+
+    idx=file.rfind("\\")
+    filename=file[idx+1:]
+
+    cv2.imwrite(path_for_Major_Spectogram+"/"+filename+".png",ImageAudio)
+    print(filename)
+
+#Minor files
+path_for_Minor_Spectogram="C:/Audio_Files/Major/New/minor"
+isExist=os.path.exists(path_for_Minor_Spectogram)
+if not isExist:
+    os.makedirs(path_for_Minor_Spectogram)
+    print("The new major folder created: !")
+
+Minoraudiofiles = glob("C:/Audio_Files/Minor/Minor_6.wav")
+
+for file in Minoraudiofiles:
+    y,sr=librosa.load(file)
+    D=librosa.stft(y)
+    S_db=librosa.amplitude_to_db(np.abs(D),ref=np.max)
+    ImageAudio= (S_db * 255).astype(np.uint8)
+
+    idx=file.rfind("\\")
+    filename=file[idx+1:]
+
+    cv2.imwrite(path_for_Minor_Spectogram+"/"+filename+".png",ImageAudio)
+    print(filename)    
